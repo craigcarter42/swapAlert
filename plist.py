@@ -37,6 +37,7 @@ else:
 # Program starts here.
 print(" -- swapAlert: Started")
 
+# Declare variables:
 swf = []
 final_swf = []
 past_dict = {}
@@ -58,7 +59,6 @@ for root, dirs, files in os.walk(file_path):
     for filename in files:
         swf.append(filename)
 
-# print(" > swf: " + str(swf))
 for x in swf:
 	if x == "swapfile":
 		final_swf.append(x)
@@ -66,8 +66,6 @@ for x in swf:
 		if x == "swapfile" + str(count):
 			final_swf.append(x)
 	count += 1
-
-# print(" > final_swf: " + str(final_swf))
 
 # Gets file name, last modified, and size.
 # Creates dictionary with list
@@ -89,9 +87,6 @@ for file in final_swf:
 	file_count += 1
 print(current_dict)
 
-# new_current_swapfiles = dict(current_swapfiles)
-# print(dict.keys(new_current_swapfiles))
-
 
 # NEXTUP:
 # Consolidate all swapfile/s information into single dictionary.
@@ -99,10 +94,12 @@ print(current_dict)
 # Compare current swapfile/s to plist.
 # Notify user if needed.
 # Update plist file.
-# Exit.
 
+# New Features:
+# Add args for degugging.
+# Add logging.
+# Add CLI.
 
-counter = 0
 
 for cd in current_swapfiles:
 	print(":: " + str(cd))
@@ -111,16 +108,9 @@ for cd in current_swapfiles:
 	"Date Modified" : lastmod
 	}
 	counter += 1
-
 	plistlib.writePlist(pl, fileName)
-
-	
 
 
 # if __name__ == '__main__':
 #    main()
 
-#/Volumes/Macintosh HD/Users/craigcarter/Desktop/VM
-#current_dict.update({"swap-file" : file})
-# head, tail = os.path.split(file_path)
-#print(" > tail: " + str(tail))
