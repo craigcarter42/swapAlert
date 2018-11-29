@@ -46,6 +46,7 @@ count = 0
 counter = 0
 swap_count = 0
 
+file_string = ""
 
 # Used for current swapfiles in VM folder.
 current_swaps = {}
@@ -53,17 +54,86 @@ add_swaps = {}
 
 # Checks to see how many files are in VM.
 for root, dirs, files in os.walk(vm_path):
-	for f in files: file_list.append(f)
+	for f in files: file_string = file_string + f
 
-# Create list containg only swap files
-for fl in file_list:
-	if(f == "swapfile"): swapfiles.append(fl)
-	if(f == 'swapfile' + str(count)): swapfiles.append(fl)
-count += 1
+
+counting_number = 0
+the_swf = []
+final_the_swf = []
+found_swf = []
+final_found_swapfiles = []
+new_found_swf = []
+update_swf = ""
+i = 0
+xi = 1
+
+found_swapfiles = re.findall(r'swapfile', file_string)
+len_check = len(found_swapfiles)
+if(len_check > 0):
+	for fs in found_swapfiles: final_found_swapfiles.append(fs)
+
+	for ffs in final_found_swapfiles[1:]:
+		final_found_swapfiles[xi] = ffs + str(i);
+		xi = xi + 1
+		i = i + 1
+
+print(final_found_swapfiles)
+
+# for fsw in found_swf:
+# 	new_list.append(fsw)
+
+# new_new_list.append(new_list[0])
+# for nnl in new_new_list[:1]:
+# 	final_new_list.append(nnl + xi)
+# 	xi = xi + 1
+
+
+# counting_number = 0
+# the_swf = []
+# final_the_swf = []
+# update_swf = ""
+# i = 0
+# found_swf = re.findall(r'swapfile', file_string)
+
+# for fsw in found_swf:
+# 	new_list.append(fsw)
+
+# new_new_list.append(new_list[0])
+# for nnl in new_new_list[:1]:
+# 	final_new_list.append(nnl + xi)
+# 	xi = xi + 1
+
+
+
+
+# final_the_swf.append('swapfile')
+# for fs in found_swf:
+# 	the_swf.append(f)
+
+# print(the_swf)
+# for ts in the_swf[1:]:
+# 	final_the_swf.append(ts + str(i))
+# 	i = i + 1
+
+# print(final_the_swf)
+# for th in the_swf[1:]:
+# 	print(th)
+
+
+
+	# if(counting_number == 0): swapfiles.append(f)
+	# if(counting_number == 1):
+	# 	update_swf = f + "0"
+	# 	swapfiles.append(update_swf)
+	# if(counting_number > 2):
+	# 	update_swf = f + "0"
+	# 	swapfiles.append(update_swf)
+	# counting_number = counting_number + 1
+
 
 # Gets file name, last modified, and size.
 # Creates dictionary with list
-for file in swapfiles:
+for file in final_found_swapfiles:
 # Creates file path for current swapfile
 	final_vm_path = vm_path + file
 
@@ -79,15 +149,45 @@ for file in swapfiles:
 # Make Swap ID for each file
 	swapid = "swf0" + str(swap_count)
 
-	add_swaps = {swapid : (final_last_mod, swapsize)}
+	add_swaps = {swapid : {"filename" : file, "lastmod" : final_last_mod, "swapsize" : swapsize}}
 	current_swaps.update(add_swaps)
 # Adds numbering to file names
 	swap_count += 1
 
-for key, value in current_swaps.iteritems():
-	print(key, value)
+def printout(value):
+	if(value == 1):
+		for key, value in current_swaps.iteritems():
+			print(key, value)
+	if(value == 2):
+		for key, value in current_swaps.iteritems():
+			print(current_swaps.get(key))
 
+def notify(title, text):
+    os.system("""
+              osascript -e 'display notification "{}" with title "{}"'
+              """.format(text, title))
 
+def compare():
+	print(" > compare")
+
+# Write to plist file
+def write_plist():
+	print(" > write_plist")
+	for key, value in current_swaps.iteritems():
+		pl = {
+			key : value
+		}
+	plistlib.writePlist(pl, plist_path)
+
+def read_plist():
+	print(" > read_plist")
+	read_pl=plistlib.readPlist(plist_path)
+	print(read_pl)
+
+def main():
+	print(" > main")
+	read_plist()
+	printout(1)
 # NEXTUP:
 # Consolidate all swapfile/s information into single dictionary.
 # Read plist file.
@@ -99,21 +199,8 @@ for key, value in current_swaps.iteritems():
 # Add args for degugging.
 # Add logging.
 # Add CLI.
-class swf():
-	def new_swf():
-		print("swf00")
+
+if __name__ == '__main__':
+   main()
 
 
-
-# for cd in current_swapfiles:
-# 	print(":: " + str(cd))
-# 	pl = {
-# 	str(counter) + " Swap ID" : cd,
-# 	"Date Modified" : lastmod
-# 	}
-# 	counter += 1
-# 	plistlib.writePlist(pl, plist_path)
-
-
-# if __name__ == '__main__':
-#    main()
