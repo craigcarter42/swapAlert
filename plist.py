@@ -20,16 +20,16 @@ except ImportError:
 
 # Path to VM folder
 # Check if folder exists
-file_path = "/Volumes/Macintosh HD/Users/craigcarter/Projects/swapAlert/VM/"
-if os.path.exists(file_path): pass
+vm_path = "/Volumes/Macintosh HD/Users/craigcarter/Projects/swapAlert/VM/"
+if os.path.exists(vm_path): pass
 else:
 	error(3)
 
 # Path to plist file.
 # Check if file exists
 # Attempt to generate new plist if file not found.
-fileName = "/Volumes/Macintosh HD/Users/craigcarter/Projects/swapAlert/swaptrack.plist"
-if os.path.exists(fileName): fileName = os.path.expanduser('~/Projects/swapAlert/swaptrack.plist')
+plist_path = "/Volumes/Macintosh HD/Users/craigcarter/Projects/swapAlert/swaptrack.plist"
+if os.path.exists(plist_path): plist_path = os.path.expanduser('~/Projects/swapAlert/swaptrack.plist')
 else:
 	error(3)
 # SETUP: END
@@ -38,54 +38,54 @@ else:
 print(" -- swapAlert: Started")
 
 # Declare variables:
-swf = []
-final_swf = []
+swapfiles = []
+file_list = []
 past_dict = {}
-found_swf = ""
-swaps = ""
+swapid = ""
 count = 0
 counter = 0
-file_count = 0
+swap_count = 0
 
-# Used for current swapfiles that in VM
-# when program runs.
-current_dict = {}
-current_dict["swapfiles"] = []
-current_swapfiles = current_dict["swapfiles"]
 
-# Program starts here.
+# Used for current swapfiles in VM folder.
+current_swaps = {}
+add_swaps = {}
+
 # Checks to see how many files are in VM.
-for root, dirs, files in os.walk(file_path):  
-    for filename in files:
-        swf.append(filename)
+for root, dirs, files in os.walk(vm_path):
+	for f in files: file_list.append(f)
 
-for x in swf:
-	if x == "swapfile":
-		final_swf.append(x)
-	for x in swf:
-		if x == "swapfile" + str(count):
-			final_swf.append(x)
-	count += 1
+# Create list containg only swap files
+for fl in file_list:
+	if(f == "swapfile"): swapfiles.append(fl)
+	if(f == 'swapfile' + str(count)): swapfiles.append(fl)
+count += 1
 
 # Gets file name, last modified, and size.
 # Creates dictionary with list
-for file in final_swf:
-	add_swapfile = {"x0" + str(file_count) + "swf" : file}
-	current_swapfiles.append(add_swapfile)
-
+for file in swapfiles:
 # Creates file path for current swapfile
-	final_file_path = file_path + file
+	final_vm_path = vm_path + file
 
 # Gets the last modified date/time of file
-	lastmodified = os.stat(final_file_path).st_mtime
+	lastmodified = os.stat(final_vm_path).st_mtime
 	lastmod = datetime.fromtimestamp(lastmodified)
+	final_last_mod = str(lastmod)
 
 # Gets size of current swap file
-	filesize = os.stat(final_file_path).st_size
-	# print(" > size: " + str(filesize))
+	swapsize = os.stat(final_vm_path).st_size
+	# print(" > size: " + str(swapsize))
+
+# Make Swap ID for each file
+	swapid = "swf0" + str(swap_count)
+
+	add_swaps = {swapid : (final_last_mod, swapsize)}
+	current_swaps.update(add_swaps)
 # Adds numbering to file names
-	file_count += 1
-print(current_dict)
+	swap_count += 1
+
+for key, value in current_swaps.iteritems():
+	print(key, value)
 
 
 # NEXTUP:
@@ -99,16 +99,20 @@ print(current_dict)
 # Add args for degugging.
 # Add logging.
 # Add CLI.
+class swf():
+	def new_swf():
+		print("swf00")
 
 
-for cd in current_swapfiles:
-	print(":: " + str(cd))
-	pl = {
-	str(counter) + " Swap ID" : cd,
-	"Date Modified" : lastmod
-	}
-	counter += 1
-	plistlib.writePlist(pl, fileName)
+
+# for cd in current_swapfiles:
+# 	print(":: " + str(cd))
+# 	pl = {
+# 	str(counter) + " Swap ID" : cd,
+# 	"Date Modified" : lastmod
+# 	}
+# 	counter += 1
+# 	plistlib.writePlist(pl, plist_path)
 
 
 # if __name__ == '__main__':
