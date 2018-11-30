@@ -41,12 +41,15 @@ print(" -- swapAlert: Started")
 swapfiles = []
 file_list = []
 past_dict = {}
-swapid = ""
-count = 0
-counter = 0
-swap_count = 0
 
+final_found_swapfiles = []
+
+i = 0
+xi = 1
+
+swap_count = 0
 file_string = ""
+swapid = ""
 
 # Used for current swapfiles in VM folder.
 current_swaps = {}
@@ -55,17 +58,6 @@ add_swaps = {}
 # Checks to see how many files are in VM.
 for root, dirs, files in os.walk(vm_path):
 	for f in files: file_string = file_string + f
-
-
-counting_number = 0
-the_swf = []
-final_the_swf = []
-found_swf = []
-final_found_swapfiles = []
-new_found_swf = []
-update_swf = ""
-i = 0
-xi = 1
 
 found_swapfiles = re.findall(r'swapfile', file_string)
 len_check = len(found_swapfiles)
@@ -77,59 +69,7 @@ if(len_check > 0):
 		xi = xi + 1
 		i = i + 1
 
-print(final_found_swapfiles)
-
-# for fsw in found_swf:
-# 	new_list.append(fsw)
-
-# new_new_list.append(new_list[0])
-# for nnl in new_new_list[:1]:
-# 	final_new_list.append(nnl + xi)
-# 	xi = xi + 1
-
-
-# counting_number = 0
-# the_swf = []
-# final_the_swf = []
-# update_swf = ""
-# i = 0
-# found_swf = re.findall(r'swapfile', file_string)
-
-# for fsw in found_swf:
-# 	new_list.append(fsw)
-
-# new_new_list.append(new_list[0])
-# for nnl in new_new_list[:1]:
-# 	final_new_list.append(nnl + xi)
-# 	xi = xi + 1
-
-
-
-
-# final_the_swf.append('swapfile')
-# for fs in found_swf:
-# 	the_swf.append(f)
-
-# print(the_swf)
-# for ts in the_swf[1:]:
-# 	final_the_swf.append(ts + str(i))
-# 	i = i + 1
-
-# print(final_the_swf)
-# for th in the_swf[1:]:
-# 	print(th)
-
-
-
-	# if(counting_number == 0): swapfiles.append(f)
-	# if(counting_number == 1):
-	# 	update_swf = f + "0"
-	# 	swapfiles.append(update_swf)
-	# if(counting_number > 2):
-	# 	update_swf = f + "0"
-	# 	swapfiles.append(update_swf)
-	# counting_number = counting_number + 1
-
+#print(final_found_swapfiles)
 
 # Gets file name, last modified, and size.
 # Creates dictionary with list
@@ -174,19 +114,21 @@ def compare():
 def write_plist():
 	print(" > write_plist")
 	for key, value in current_swaps.iteritems():
-		pl = {
-			key : value
-		}
-	plistlib.writePlist(pl, plist_path)
+		pl = key, value
+		print(pl)
+	# 	pl = {
+	# 		key : value
+	# 	}
+	# plistlib.writePlist(pl, plist_path)
 
 def read_plist():
 	print(" > read_plist")
-	read_pl=plistlib.readPlist(plist_path)
+	read_pl = plistlib.readPlist(plist_path)
 	print(read_pl)
 
 def main():
 	print(" > main")
-	read_plist()
+	#read_plist()
 	printout(1)
 # NEXTUP:
 # Consolidate all swapfile/s information into single dictionary.
