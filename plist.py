@@ -20,7 +20,7 @@ except ImportError:
 
 # Path to VM folder
 # Check if folder exists
-vm_path = "/Volumes/Macintosh HD/Users/craigcarter/Projects/swapAlert/VM/"
+vm_path = "/Volumes/Macintosh HD/Users/craigcarter/Projects/swapAlert/VM2/"
 if os.path.exists(vm_path): pass
 else:
 	error(3)
@@ -41,6 +41,7 @@ print(" -- swapAlert: Started")
 swapfiles = []
 file_list = []
 past_dict = {}
+read_pl = {}
 
 final_found_swapfiles = []
 
@@ -107,29 +108,44 @@ def notify(title, text):
               osascript -e 'display notification "{}" with title "{}"'
               """.format(text, title))
 
-def compare():
-	print(" > compare")
+def compare(current_swaps, read_pl):
+	print(" -- swapAlert: Compare")
+	compared_swaps = {}
+	for key in current_swaps.keys():
+		if key in read_pl.keys():
+			if current_swaps[key] == read_pl[key]:
+				compared_swaps[key] = current_swaps[key]
+
+	for key, value in compared_swaps.items():
+	    print(key)
+	    print(value)
 
 # Write to plist file
 def write_plist():
-	print(" > write_plist")
-	for key, value in current_swaps.iteritems():
-		pl = key, value
-		print(pl)
-	# 	pl = {
-	# 		key : value
-	# 	}
-	# plistlib.writePlist(pl, plist_path)
+	global current_swaps
+	print(" -- swapAlert: write_plist")
+	# for key, value in current_swaps.iteritems():
+		# pl = key, value
+		# print(pl)
+	pl = current_swaps
+	plistlib.writePlist(pl, plist_path)
 
 def read_plist():
-	print(" > read_plist")
+	global read_pl
+	print(" -- swapAlert: read_plist")
 	read_pl = plistlib.readPlist(plist_path)
-	print(read_pl)
+	for key, value in read_pl.iteritems():
+		print(key, value)
 
 def main():
+	# write_plist()
 	print(" > main")
+	read_plist()
+	compare(current_swaps, read_pl)
 	#read_plist()
-	printout(1)
+	# printout(1)
+
+
 # NEXTUP:
 # Consolidate all swapfile/s information into single dictionary.
 # Read plist file.
@@ -144,5 +160,6 @@ def main():
 
 if __name__ == '__main__':
    main()
+
 
 
