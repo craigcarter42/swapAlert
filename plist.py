@@ -176,7 +176,7 @@ def read_plist():
     print(" -- swapAlert: read_plist")
     read_pl = plistlib.readPlist(plist_path)
     # for key, value in read_pl.iteritems():
-    #     print(key, value)
+    # 	print(key, value)
     print(read_pl)
 
 def main():
@@ -194,7 +194,7 @@ def main():
     compare(current_swaps, read_pl)
     #compare(current_swaps, read_pl)
     # write_plist()
-    
+
     # printout(1)
 
 
